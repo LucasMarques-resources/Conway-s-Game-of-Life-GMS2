@@ -3,9 +3,9 @@
 
 draw_grid = function()
 {
-	for (var xx = 0; xx < grid_w; xx += 1)
+	for (var xx = 0; xx < grid_w; xx++)
 	{
-		for (var yy = 0; yy < grid_h; yy += 1)
+		for (var yy = 0; yy < grid_h; yy++)
 		{
 			var _value = grid[# xx, yy];
 			var _x = xx * cellSize;
@@ -21,9 +21,12 @@ draw_grid = function()
 
 generate = function()
 {
-	for (var xx = 1; xx < grid_w - 1; xx += 1)
+	var _grid = ds_grid_create(cols, rows);
+	ds_grid_clear(_grid, 0);
+	
+	for (var xx = 1; xx < cols - 1; xx++)
 	{
-		for (var yy = 1; yy < grid_h - 1; yy += 1)
+		for (var yy = 1; yy < rows - 1; yy++)
 		{
 			var _neighbors = 0;
 			for (var i = -1; i <= 1; i++)
@@ -33,10 +36,36 @@ generate = function()
 					_neighbors += grid[# xx + i, yy + j];
 				}
 			}
+			
+			// Subtract current cell's state since it was added in the above loop
+			_neighbors -= grid[# xx, yy];
+			
+			// Loneliness
+			if ((grid[# xx, yy] == 1) && (_neighbors < 2))
+			{
+				_grid[# xx, yy] = 0;
+			}
+			// Overpopulation
+			else if ((grid[# xx, yy] == 1) && (_neighbors > 3))
+			{
+				_grid[# xx, yy] = 0;
+			}
+			// Reproduction
+			else if ((grid[# xx, yy] == 0) && (_neighbors == 3))
+			{
+				_grid[# xx, yy] = 1;
+			}
+			// Stasis
+			else
+			{
+				_grid[# xx, yy] = grid[# xx, yy]; 
+			}
 		}
 	}
 	
-	// Rules of life
+	ds_grid_copy(grid, _grid);
+	
+	ds_grid_destroy(_grid);
 }
 
 click_grid = function()
@@ -50,4 +79,8 @@ click_grid = function()
 }
 
 
-generate();
+if (gameOn)
+{
+	generate();
+}
+//if (keyboard_check_pressed(vk_space)) generate();
