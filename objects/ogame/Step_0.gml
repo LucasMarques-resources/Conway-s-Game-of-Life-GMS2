@@ -8,8 +8,8 @@ draw_grid = function()
 		for (var yy = 0; yy < grid_h; yy++)
 		{
 			var _value = grid[# xx, yy];
-			var _x = xx * cellSize;
-			var _y = yy * cellSize;
+			var _x = xx * cellSize + 1;
+			var _y = yy * cellSize + 1;
 			// If is alive
 			if (_value)
 				draw_rectangle(_x, _y, _x + cellSize, _y + cellSize, false);
@@ -81,6 +81,11 @@ click_grid = function()
 
 if (gameOn)
 {
-	generate();
+	timer--;
+	if (timer <= 0)
+	{
+		generate();
+		timer = timerTime;
+	}
 }
 //if (keyboard_check_pressed(vk_space)) generate();

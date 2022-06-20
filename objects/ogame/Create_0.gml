@@ -12,6 +12,8 @@ grid_h = ds_grid_height(grid);
 ds_grid_clear(grid, 0);
 
 gameOn = false;
+timerTime = room_speed / 8;
+timer = 0;
 
 // Draw cells randomly
 //for (var xx = 0; xx < grid_w; xx++)
